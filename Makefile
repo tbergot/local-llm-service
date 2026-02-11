@@ -1,4 +1,4 @@
-.PHONY: help build up down logs pull-models health test
+.PHONY: help build up down logs pull-models health test lint
 
 .DEFAULT_GOAL := help
 
@@ -20,6 +20,10 @@ pull-models: ## retélécharger les modèles
 
 health: ## Vérifier l'état du service
 	@curl -sf http://localhost:8080/health | python3 -m json.tool
+
+lint: ## Ruff
+	ruff check
+	ruff format --check
 
 test: ## Lancer les tests
 	python -m pytest tests/

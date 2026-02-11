@@ -16,6 +16,8 @@ settings = Settings()
 _models_ready = False
 
 N_TENTATIVES = 60
+
+
 async def _wait_for_ollama(client: httpx.AsyncClient) -> None:
     """Attend qu'Ollama soit prêt à répondre."""
     import asyncio
