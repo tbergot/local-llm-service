@@ -1,0 +1,39 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "${LLM_SERVICE_PORT:-11434}:11434"
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - llm-network
+
+  sidecar:
+    build:
+      context: .
+      dockerfile: sidecar/Dockerfile
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - LLM_CHAT_MODEL=${LLM_CHAT_MODEL:-mistral:7b}
+      - LLM_EMBEDDING_MODEL=${LLM_EMBEDDING_MODEL:-nomic-embed-text}
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
+    ports:
+      - "8080:8080"
+    networks:
+      - llm-network
+
+volumes:
+  ollama_data:
+
+networks:
+  llm-network:
+    name: llm-network
