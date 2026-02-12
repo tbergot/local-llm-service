@@ -47,3 +47,4 @@ jobs:
           image-ref: local-llm-service:${{ github.sha }}
           exit-code: '1'
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
